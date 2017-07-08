@@ -25,6 +25,5 @@
         }
     ],
     "require-dev": {
-        "marc-mabe/php-enum": "^2.0"
     }
 }
