@@ -1,0 +1,30 @@
+enum Baz {
+  BAZ_ONE
+  BAZ_TWO
+  BAZ_THREE
+}
+
+input FooInput {
+  id: ID!
+  stuff: String
+  lst: [String]!
+}
+
+type Bar {
+  id: ID!
+  blah(num: Int!): Int!
+}
+
+type Foo {
+  id: ID!
+  stuff: String
+  bars: [Bar!]
+}
+
+type Query {
+  bar(id: ID!): Bar!
+
+  foo(id: FooInput): Foo!
+
+  foos(ids: [ID!], blah: String): [Foo!]!
+}

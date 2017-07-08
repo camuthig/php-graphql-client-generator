@@ -1,0 +1,30 @@
+{
+    "name": "camuthig/graphql-client-generator",
+    "description": "Generate service implementations and DTOs based on a GraphQL schema",
+    "type": "library",
+    "require": {
+        "webonyx/graphql-php": "^0.9.11",
+        "memio/memio": "^1.1",
+        "beberlei/assert": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "GraphQl\\Client\\": "src/Client",
+            "GraphQl\\Generator\\": "src/Generator"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Foo\\": "manual/Foo"
+        }
+    },
+    "authors": [
+        {
+            "name": "Chris Muthig",
+            "email": "camuthig@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "marc-mabe/php-enum": "^2.0"
+    }
+}
