@@ -19,7 +19,7 @@ abstract class GraphQlService
         $this->url = $url;
     }
 
-    protected function send(string $query): array
+    protected function send(string $query)
     {
         $body = ['query' => $query];
 

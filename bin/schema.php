@@ -29,8 +29,6 @@ class Foo {
     }
 }
 
-$dateType = new \GraphQL\Type\Definition\CustomScalarType()
-
 $barType = new ObjectType(
     [
         'name' => 'Bar',
@@ -42,8 +40,8 @@ $barType = new ObjectType(
                 }
             ],
             'dateType' => [
-                'type' => Type::
-            ]
+                'type' => \Foo\DateType::class,
+            ],
             'blah' => [
                 'type' => Type::nonNull(Type::int()),
                 'args' => [

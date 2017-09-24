@@ -64,6 +64,23 @@ class TypeManager
         return null;
     }
 
+    public function getClassFor(string $name): string
+    {
+        if (array_key_exists($name, $this->customScalars)) {
+            return $this->customScalars[$name];
+        } elseif (array_key_exists($name, $this->enums)) {
+            return $this->enums[$name];
+        } elseif (array_key_exists($name, $this->unions)) {
+            return $this->unions[$name];
+        } elseif (array_key_exists($name, $this->inputTypes)) {
+            return $this->inputTypes[$name];
+        } elseif (array_key_exists($name, $this->outputTypes)) {
+            return $this->outputTypes[$name];
+        }
+
+        return null;
+    }
+
     /**
      * @param string $name  The name of the type
      * @param string $klass The FQCN of the class to register

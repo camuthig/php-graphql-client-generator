@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace GraphQl\Generator;
 
+use GraphQl\Client\Enum;
 use GraphQL\Language\AST\DocumentNode;
 use GraphQL\Language\AST\FieldDefinitionNode;
 use GraphQL\Language\AST\InputValueDefinitionNode;
@@ -26,6 +27,16 @@ use Memio\Model\Phpdoc\ReturnTag;
 
 class ServiceGenerator
 {
+    /**
+     * @var TypeManager
+     */
+    private $typeManager;
+
+    public function __construct(TypeManager $typeManager)
+    {
+        $this->typeManager = $typeManager;
+    }
+
     public function buildService(string $namespace, string $to, DocumentNode $documentNode): void
     {
         $serviceName   = explode('\\', $namespace);
@@ -124,7 +135,8 @@ class ServiceGenerator
             ->addMethod($method);
     }
 
-    protected function getDecodeType(Type $type) {
+    protected function getDecodeType(Type $type): ?string
+    {
         if ($type instanceof NamedTypeNode && $type->name->value !== 'ID') {
             return ucfirst($type->name->value);
         }
@@ -148,9 +160,7 @@ class ServiceGenerator
     protected function buildBody(FieldDefinitionNode $field): string
     {
         $action      = $field->name->value;
-        $resultType  = $this->getDecodeType($field->type);
-        // @TODO Handle lists with `array_map`
-        $returnValue = $resultType ? "$resultType::fromArray(\$result)" : '$result';
+        $returnValue = $this->buildReturn($field);
 
         // Determine what validation is needed for input
         $argumentValidations = '';
@@ -179,5 +189,85 @@ class ServiceGenerator
 BODY;
 
         return $body;
+    }
+
+    protected function buildReturn(FieldDefinitionNode $definitionNode): string
+    {
+        $type = $definitionNode->type;
+
+        if ($type instanceof ListTypeNode) {
+            return $this->buildListTypeReturn($type);
+        } elseif ($type instanceof NonNullTypeNode) {
+            if ($type->type instanceof ListTypeNode) {
+                return $this->buildListTypeReturn($type->type);
+            } else {
+                return $this->buildNamedTypeReturn($type->type);
+            }
+        } elseif ($type instanceof NamedTypeNode) {
+            return $this->buildNamedTypeReturn($type);
+        }
+
+        return '\'\';';
+    }
+
+    protected function buildListTypeReturn(ListTypeNode $type): string
+    {
+        $innerType = $type->type;
+        if ($type->type instanceof NonNullTypeNode) {
+            $innerType = $type->type->type;
+        }
+
+        if (PhpHelper::isNonScalar($innerType)) {
+            // If it is a non-scalar, I need to map across the array
+            $innerTypeName = $innerType->name->value;
+            switch ($this->typeManager->getTypeOf($innerType->name->value)) {
+                case TypeManager::ENUM_TYPE:
+                    return <<<SET
+array_map(function (\$val) {
+            return $innerTypeName::fromString(\$val);
+        }, \$result)
+SET;
+                case TypeManager::OUTPUT_TYPE:
+                    return <<<SET
+array_map(function(\$val) {
+            return $innerTypeName::fromArray(\$val);
+        }, \$result)
+SET;
+                case TypeManager::SCALAR_TYPE:
+                    return <<<SET
+array_map(function(\$val) {
+            return $innerTypeName::parse(\$val);
+        }, \$result)
+SET;
+
+                case TypeManager::UNION_TYPE:
+                    // @TODO
+                default:
+                    return '';
+            }
+        } else {
+            // I have an array of scalars, so I can treat the setting as if it was a single scalar
+            return sprintf('$instance->scalarFromArray($fields, \'%s\');', $field);
+        }
+    }
+
+    protected function buildNamedTypeReturn(NamedTypeNode $type): string
+    {
+        if (PhpHelper::isNonScalar($type)) {
+            switch ($this->typeManager->getTypeOf($type->name->value)) {
+                case TypeManager::ENUM_TYPE:
+                    return '\\' . $this->typeManager->getClassFor($type->name->value) . '::fromString($result)';
+                case TypeManager::OUTPUT_TYPE:
+                    return '\\' . $this->typeManager->getClassFor($type->name->value) . '::fromArray($result)';
+                case TypeManager::SCALAR_TYPE:
+                    return '\\' . $this->typeManager->getClassFor($type->name->value) . '::parse($result)';
+                case TypeManager::UNION_TYPE:
+                    // @TODO
+                default:
+                    throw new \Exception('No way to determine return structure for type named ' . $type->name->value);
+            }
+        }
+
+        return sprintf('$result;');
     }
 }

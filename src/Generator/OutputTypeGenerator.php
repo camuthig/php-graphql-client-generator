@@ -155,7 +155,6 @@ BODY
     {
         if (PhpHelper::isNonScalar($type)) {
             switch ($this->typeManager->getTypeOf($type->name->value)) {
-//            switch (true) {
                 case TypeManager::ENUM_TYPE:
                     return sprintf(
                         '$instance->enumFromArray($fields, \'%s\', %s::class);',

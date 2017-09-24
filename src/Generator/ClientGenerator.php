@@ -63,7 +63,7 @@ class ClientGenerator
         $fieldSelectionGenerator->buildFieldSelections($namespace, $to, $parsedSchema);
 
         // Build the service class itself
-        $serviceGenerator = new ServiceGenerator();
+        $serviceGenerator = new ServiceGenerator($this->typeManager);
         $serviceGenerator->buildService($namespace, $to, $parsedSchema);
     }
 
