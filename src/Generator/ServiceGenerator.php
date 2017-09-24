@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace GraphQl\Generator;
 
 use GraphQl\Client\Enum;
+use GraphQl\Client\GraphQlService;
+use GraphQl\Client\Query;
 use GraphQL\Language\AST\DocumentNode;
 use GraphQL\Language\AST\FieldDefinitionNode;
 use GraphQL\Language\AST\InputValueDefinitionNode;
@@ -50,10 +52,12 @@ class ServiceGenerator
                     $this->buildQueryMethods($serviceObject, $field);
                 }
             }
+
+            // @TODO Build mutation methods
         }
 
         // Add service extension and use statements
-        $serviceObject->extend(new ModelObject('GraphQl\\Client\\GraphQlService'));
+        $serviceObject->extend(new ModelObject(GraphQlService::class));
 
 
         $file = File::make($to . '/' . $namespace)
@@ -61,8 +65,8 @@ class ServiceGenerator
 
         // Add the dependencies
         $file
-            ->addFullyQualifiedName(new FullyQualifiedName(PhpHelper::CLIENT_NAMESPACE . 'GraphQlService'))
-            ->addFullyQualifiedName(new FullyQualifiedName(PhpHelper::CLIENT_NAMESPACE . 'Query'))
+            ->addFullyQualifiedName(new FullyQualifiedName(GraphQlService::class))
+            ->addFullyQualifiedName(new FullyQualifiedName(Query::class))
             ->addFullyQualifiedName(new FullyQualifiedName('Assert'));
 
         $prettyPrinter = Build::prettyPrinter();
@@ -82,7 +86,6 @@ class ServiceGenerator
         if ($node instanceof NonNullTypeNode) {
             return $this->getSelectionArgument($node->type);
         }
-
 
         return null;
     }
@@ -247,7 +250,7 @@ SET;
             }
         } else {
             // I have an array of scalars, so I can treat the setting as if it was a single scalar
-            return sprintf('$instance->scalarFromArray($fields, \'%s\');', $field);
+            return '$result';
         }
     }
 

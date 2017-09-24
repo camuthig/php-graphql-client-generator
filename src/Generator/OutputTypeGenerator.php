@@ -12,7 +12,6 @@ use GraphQL\Language\AST\NamedTypeNode;
 use GraphQL\Language\AST\NonNullTypeNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\AST\TypeNode;
-use GraphQL\Type\Definition\EnumType;
 use Memio\Memio\Config\Build;
 use Memio\Model\Argument;
 use Memio\Model\File;
@@ -91,9 +90,10 @@ class OutputTypeGenerator
         }
 
         // Add dependencies
-        $file->addFullyQualifiedName(new FullyQualifiedName('Assert'));
-        $file->addFullyQualifiedName(new FullyQualifiedName(Option::class));
-        $file->addFullyQualifiedName(new FullyQualifiedName(OutputObject::class));
+        $file
+            ->addFullyQualifiedName(new FullyQualifiedName('Assert'))
+            ->addFullyQualifiedName(new FullyQualifiedName(Option::class))
+            ->addFullyQualifiedName(new FullyQualifiedName(OutputObject::class));
 
         $outputObject->extend(new ModelObject(OutputObject::class));
 
