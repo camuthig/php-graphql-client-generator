@@ -6,9 +6,11 @@ namespace GraphQl\Generator;
 
 use GraphQL\Language\AST\ListTypeNode;
 use GraphQL\Language\AST\NamedTypeNode;
+use GraphQL\Language\AST\NameNode;
 use GraphQL\Language\AST\Node;
 use GraphQL\Language\AST\NonNullType;
 use GraphQL\Language\AST\NonNullTypeNode;
+use GraphQL\Language\AST\TypeNode;
 use GraphQL\Type\Definition\BooleanType;
 use GraphQL\Type\Definition\FloatType;
 use GraphQL\Type\Definition\IntType;
@@ -48,48 +50,48 @@ class PhpHelper
         }
     }
 
-    public static function allowsNull(Node $node):  bool
+    public static function allowsNull(TypeNode $node):  bool
     {
         // @TODO This only looks at the top level and could probably use some more thought
         return !$node instanceof NonNullTypeNode;
     }
 
-    public static function getPhpType(Node $node): ?string
+    public static function getPhpType(TypeNode $node): ?string
     {
-        // @TODO Support nullables?
+        $nullable = '';
         if (self::allowsNull($node)) {
-            return 'mixed';
+            $nullable = '?';
         }
 
         switch (true) {
             case $node instanceof NonNullTypeNode:
-                return self::getPhpType($node->type);
+                return $nullable . self::getPhpType($node->type);
             case $node instanceof ListTypeNode:
-                return 'array';
+                return $nullable . 'array';
             case $node instanceof IntType:
-                return 'int';
+                return $nullable . 'int';
             case $node instanceof FloatType:
-                return 'float';
+                return $nullable . 'float';
             case $node instanceof BooleanType:
-                return 'bool';
+                return $nullable . 'bool';
             case $node instanceof NamedTypeNode:
-                return self::getNamedPhpType($node);
+                return $nullable . self::getNamedPhpType($node);
             default:
-                return 'string';
+                return $nullable . 'string';
         }
     }
 
     /**
-     * @param Node $node
+     * @param TypeNode $node
      * @param bool $allowsNull
      *
      * @return string
      */
-    public static function getPhpDocType(Node $node, $allowsNull = false): string
+    public static function getPhpDocType(TypeNode $node, $allowsNull = false): string
     {
         $nullDefault = 'null|';
         switch (true) {
-            case $node instanceof NonNullType:
+            case $node instanceof NonNullTypeNode:
                  $type = substr(self::getPhpDocType($node->type), strlen($nullDefault));
                  break;
 
@@ -100,8 +102,8 @@ class PhpHelper
                 break;
 
             case $node instanceof NamedTypeNode:
-                 $type = $nullDefault . self::getNamedPhpType($node);
-                 break;
+                $type = $nullDefault . self::getNamedPhpType($node);
+                break;
 
             default:
                 $type = $nullDefault . 'mixed';

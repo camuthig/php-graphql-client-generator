@@ -59,7 +59,7 @@ class ClientGenerator
         $outputTypeGenerator->buildOutputTypes($namespace, $to, $parsedSchema);
 
         // Build the field selection types
-        $fieldSelectionGenerator = new FieldSelectionGenerator();
+        $fieldSelectionGenerator = new FieldSelectionGenerator($this->typeManager);
         $fieldSelectionGenerator->buildFieldSelections($namespace, $to, $parsedSchema);
 
         // Build the service class itself

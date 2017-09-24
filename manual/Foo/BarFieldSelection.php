@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Foo;
 
 use GraphQl\Client\BaseFieldSelection;
+use GraphQl\Client\Option;
 
 class BarFieldSelection extends BaseFieldSelection
 {
@@ -21,8 +22,17 @@ class BarFieldSelection extends BaseFieldSelection
         return $this->withSpecifiedField(self::ID, null, null);
     }
 
-    public function withBlah(int $num): self
+    /**
+     * @param Option|null|int $num
+     *
+     * @return BarFieldSelection
+     */
+    public function withBlah($num): self
     {
-        return $this->withSpecifiedField(self::BLAH, ['num' => $num], null);
+        $args = [];
+
+        $num->isNone() ?: $args['num'] = $num;
+
+        return $this->withSpecifiedField(self::BLAH, $args, null);
     }
 }
