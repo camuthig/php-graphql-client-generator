@@ -4,10 +4,14 @@ enum Baz {
   BAZ_THREE
 }
 
+scalar Date
+
 input FooInput {
   id: ID!
   stuff: String
   lst: [String]!
+  dt: Date
+  enm: Baz
 }
 
 type Bar {
@@ -19,6 +23,8 @@ type Foo {
   id: ID!
   stuff: String
   bars: [Bar!]
+  dt: Date
+  enm: Baz
 }
 
 type Query {

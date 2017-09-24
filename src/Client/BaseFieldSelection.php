@@ -43,7 +43,6 @@ abstract class BaseFieldSelection
             function (Field $field) {
                 $encodedArguments = '';
                 if ($field->getArguments()) {
-                    // @TODO support arguments
                     $arguments = [];
                     if ($field->getArguments()) {
                         foreach ($field->getArguments() as $name => $value) {

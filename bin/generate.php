@@ -6,5 +6,7 @@ $schemaPath = __DIR__ . '/simple_schema.graphqls';
 
 $generatePath = __DIR__ . '/output/';
 
-$generator = new \GraphQl\Generator\ClientGenerator();
+$typeManager = new \GraphQl\Generator\TypeManager();
+
+$generator = new \GraphQl\Generator\ClientGenerator($typeManager);
 $generator->generateFrom('Foo', $schemaPath, $generatePath);

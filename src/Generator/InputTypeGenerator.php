@@ -21,6 +21,16 @@ use Memio\Model\Property;
 class InputTypeGenerator
 {
     /**
+     * @var TypeManager
+     */
+    private $typeManager;
+
+    public function __construct(TypeManager $typeManager)
+    {
+        $this->typeManager = $typeManager;
+    }
+
+    /**
      * @param string       $namespace    The namespace for the classes to be placed under
      * @param string       $to           Directory to write the files to
      * @param DocumentNode $documentNode
@@ -34,7 +44,7 @@ class InputTypeGenerator
         }
     }
 
-    protected function buildInputType($namespace, $to, InputObjectTypeDefinitionNode $inputNode)
+    protected function buildInputType(string $namespace, string $to, InputObjectTypeDefinitionNode $inputNode)
     {
         $className   = $inputNode->name->value;
         $inputObject = ModelObject::make($namespace . '\\' . $className);
