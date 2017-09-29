@@ -126,7 +126,9 @@ class ServiceGenerator
         }
 
         // Handle return type
-        $methodDoc->setReturnTag(ReturnTag::make($this->getReturnDoc($field->type)));
+        // @TODO Handle decoding results again
+//        $methodDoc->setReturnTag(ReturnTag::make($this->getReturnDoc($field->type)));
+        $methodDoc->setReturnTag(ReturnTag::make('array'));
 
         // Set the doc block
         $method->setPhpdoc($methodDoc);
@@ -163,7 +165,9 @@ class ServiceGenerator
     protected function buildBody(FieldDefinitionNode $field): string
     {
         $action      = $field->name->value;
-        $returnValue = $this->buildReturn($field);
+        // @TODO Handle decoding results again
+//        $returnValue = $this->buildReturn($field);
+        $returnValue = '$result';
 
         // Determine what validation is needed for input
         $argumentValidations = '';
