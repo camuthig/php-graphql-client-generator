@@ -40,6 +40,10 @@ class ClientGenerator
         // Collect the types into the manager
         $this->collectTypes($namespace, $parsedSchema);
 
+        // Build the interfaces
+        $interfaceGenerator = new InterfaceGenerator($this->typeManager);
+        $interfaceGenerator->buildInterfaceTypes($namespace, $to, $parsedSchema);
+
         // Build the enum types
         $enumTypeGenerator = new EnumTypeGenerator($this->typeManager);
         $enumTypeGenerator->buildEnumTypes($namespace, $to, $parsedSchema);

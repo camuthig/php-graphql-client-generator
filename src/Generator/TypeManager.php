@@ -5,17 +5,19 @@ namespace GraphQl\Generator;
 use GraphQL\Language\AST\DefinitionNode;
 use GraphQL\Language\AST\EnumTypeDefinitionNode;
 use GraphQL\Language\AST\InputObjectTypeDefinitionNode;
+use GraphQL\Language\AST\InterfaceTypeDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\AST\ScalarTypeDefinitionNode;
 use GraphQL\Language\AST\UnionTypeDefinitionNode;
 
 class TypeManager
 {
-    const SCALAR_TYPE = 'SCALAR';
-    const ENUM_TYPE   = 'ENUM';
-    const UNION_TYPE  = 'UNION';
-    const INPUT_TYPE  = 'INPUT_TYPE';
-    const OUTPUT_TYPE = 'OUTPUT_TYPE';
+    const SCALAR_TYPE    = 'SCALAR';
+    const ENUM_TYPE      = 'ENUM';
+    const UNION_TYPE     = 'UNION';
+    const INPUT_TYPE     = 'INPUT_TYPE';
+    const OUTPUT_TYPE    = 'OUTPUT_TYPE';
+    const INTERFACE_TYPE = 'INTERFACE_TYPE';
 
     /**
      * @var array
@@ -43,6 +45,11 @@ class TypeManager
     private $outputTypes = [];
 
     /**
+     * @var array
+     */
+    private $interfaceTypes = [];
+
+    /**
      * @param $name
      *
      * @return null|string
@@ -59,6 +66,8 @@ class TypeManager
             return self::INPUT_TYPE;
         } elseif (array_key_exists($name, $this->outputTypes)) {
             return self::OUTPUT_TYPE;
+        } elseif (array_key_exists($name, $this->interfaceTypes)) {
+            return self::INTERFACE_TYPE;
         }
 
         return null;
@@ -76,6 +85,8 @@ class TypeManager
             return $this->inputTypes[$name];
         } elseif (array_key_exists($name, $this->outputTypes)) {
             return $this->outputTypes[$name];
+        } elseif (array_key_exists($name, $this->interfaceTypes)) {
+            return $this->interfaceTypes[$name];
         }
 
         return null;
@@ -137,6 +148,17 @@ class TypeManager
     }
 
     /**
+     * @param string $name  The name of the type
+     * @param string $klass The FQCN of the class to register
+     *
+     * @return void
+     */
+    public function registerInterface(string $name, string $klass)
+    {
+        $this->interfaceTypes[$name] = $klass;
+    }
+
+    /**
      * Register a generic node into the manager
      *
      * @param string         $namespace  The namespace to register the type under
@@ -159,6 +181,10 @@ class TypeManager
                 break;
             case $definition instanceof UnionTypeDefinitionNode:
                 $this->registerUnion($this->nodeName($definition), $this->nodeClass($namespace, $definition));
+                break;
+            case $definition instanceof InterfaceTypeDefinitionNode:
+                $this->registerInterface($this->nodeName($definition), $this->nodeClass($namespace, $definition));
+                break;
         }
     }
 

@@ -4,6 +4,10 @@ enum Baz {
   BAZ_THREE
 }
 
+interface FooBar {
+  id: ID!
+}
+
 scalar Date
 
 input FooInput {
@@ -14,12 +18,12 @@ input FooInput {
   enm: Baz
 }
 
-type Bar {
+type Bar implements FooBar {
   id: ID!
   blah(num: Int!): Int!
 }
 
-type Foo {
+type Foo implements FooBar {
   id: ID!
   stuff: String
   bars: [Bar!]

@@ -14,6 +14,7 @@ use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\AST\TypeNode;
 use Memio\Memio\Config\Build;
 use Memio\Model\Argument;
+use Memio\Model\Contract;
 use Memio\Model\File;
 use Memio\Model\FullyQualifiedName;
 use Memio\Model\Method;
@@ -87,6 +88,11 @@ class OutputTypeGenerator
                     )
                     ->setBody('        return $this->' . $field->name->value . '->get();')
             );
+        }
+
+        // Add interfaces
+        foreach ($outputNode->interfaces as $interface) {
+            $outputObject->implement(Contract::make($this->typeManager->getClassFor($interface->name->value)));
         }
 
         // Add dependencies
