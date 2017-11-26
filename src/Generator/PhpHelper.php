@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GraphQl\Generator;
+namespace Camuthig\Graphql\ServiceGenerator\Generator;
 
 use GraphQL\Language\AST\ListTypeNode;
 use GraphQL\Language\AST\NamedTypeNode;

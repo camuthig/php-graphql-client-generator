@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQl\Client;
+namespace Camuthig\Graphql\ServiceGenerator\Client;
 
 /**
  * A simple implementation of custom type using strings. This class will be used for any scalar the

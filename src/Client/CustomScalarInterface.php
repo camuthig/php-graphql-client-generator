@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQl\Client;
+namespace Camuthig\Graphql\ServiceGenerator\Client;
 
 /**
  * An interface to encapsulate custom defined Scalar values from the schema. We need some way for users to be able to

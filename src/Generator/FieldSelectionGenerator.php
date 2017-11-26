@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQl\Generator;
+namespace Camuthig\Graphql\ServiceGenerator\Generator;
 
 use GraphQl\Client\BaseFieldSelection;
 use GraphQl\Client\Option;

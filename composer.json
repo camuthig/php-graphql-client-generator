@@ -3,20 +3,20 @@
     "description": "Generate service implementations and DTOs based on a GraphQL schema",
     "type": "library",
     "require": {
-        "php": ">7.0",
+        "php": "^7.1",
         "webonyx/graphql-php": "^0.9.11",
         "memio/memio": "^1.1",
         "beberlei/assert": "^2.0"
     },
     "autoload": {
         "psr-4": {
-            "GraphQl\\Client\\": "src/Client",
-            "GraphQl\\Generator\\": "src/Generator"
+            "Camuthig\\Graphql\\Service\\": "src/Client",
+            "Graphql\\Graphql\\ServiceGenerator\\": "src/Generator"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Foo\\": "manual/Foo"
+            "Camuthig\\Graphql\\Service\\Manual\\": "manual"
         }
     },
     "authors": [

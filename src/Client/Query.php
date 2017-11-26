@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GraphQl\Client;
+namespace Camuthig\Graphql\ServiceGenerator\Client;
 
 /**
  * @TODO This could instead be part of generated code that would part of the client and have custom functions

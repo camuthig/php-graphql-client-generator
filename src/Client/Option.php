@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GraphQl\Client;
+namespace Camuthig\Graphql\ServiceGenerator\Client;
 
 class Option
 {

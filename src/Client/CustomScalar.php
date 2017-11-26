@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQl\Client;
+namespace Camuthig\Graphql\ServiceGenerator\Client;
 
 abstract class CustomScalar implements CustomScalarInterface
 {

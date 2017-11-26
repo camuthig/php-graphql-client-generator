@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQl\Generator;
+namespace Camuthig\Graphql\ServiceGenerator\Generator;
 
 use GraphQL\Language\AST\DocumentNode;
 use GraphQL\Language\AST\EnumTypeDefinitionNode;

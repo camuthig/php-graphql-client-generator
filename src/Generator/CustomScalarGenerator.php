@@ -1,6 +1,6 @@
 <?php
 
-namespace GraphQl\Generator;
+namespace Camuthig\Graphql\ServiceGenerator\Generator;
 
 use GraphQl\Client\DefaultCustomType;
 use GraphQL\Language\AST\DocumentNode;

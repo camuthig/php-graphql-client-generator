@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace GraphQl\Generator;
+namespace Camuthig\Graphql\ServiceGenerator\Generator;
 
 use GraphQl\Client\Enum;
 use GraphQl\Client\GraphQlService;
